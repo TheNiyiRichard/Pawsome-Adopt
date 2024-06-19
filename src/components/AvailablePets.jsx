@@ -24,7 +24,7 @@ const AvailablePets = () => {
         ))}
       </ul>
 
-      <PetsDisplay />
+      <PetsDisplay type={pets[isActive]} />
     </div>
   );
 };

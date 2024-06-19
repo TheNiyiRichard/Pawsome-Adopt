@@ -21,7 +21,7 @@ const Footer = () => {
       <section className="flex w-full flex-col flex-wrap items-start justify-center gap-10 px-8 py-10 sm:flex-row sm:justify-start">
         <div className="flex flex-col gap-3 sm:w-1/2">
           <Logo />
-          <p>Copyright © 2022. All rights reserved</p>
+          <p>Copyright © 2024. All rights reserved</p>
           <span className="flex gap-3">
             <BsFacebook />
             <BsTwitter />
