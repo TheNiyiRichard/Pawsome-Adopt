@@ -29,9 +29,8 @@ const AdoptionJourney = () => {
           </div>
 
           <div className="flex gap-2 text-xs">
-            <im
+            <img
               loading="lazy"
-              g
               src={syringe}
               alt="heart"
               className="h-10 w-10"

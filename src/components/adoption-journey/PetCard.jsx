@@ -1,7 +1,7 @@
 import React from "react";
-import { GoArrowRight } from "react-icons/go";
 
-const PetCard = ({ type, img, name, age }) => {
+const PetCard = ({ type, img, name, age,status }) => {
+  const statusColor = status === 'Available' ? 'text-green-500' : 'text-red-500';
   return (
     <div className="flex flex-col items-start justify-center gap-3">
       <div className="h-60 w-80 overflow-hidden rounded-2xl">
@@ -16,13 +16,15 @@ const PetCard = ({ type, img, name, age }) => {
       </div>
 
       <div className="flex w-full items-start justify-between px-1">
-        <section className="flex flex-col gap-1">
+        <section className="flex w-full flex-col gap-1">
           <h3 className="text-xl font-bold">{name}</h3>
-          <p className="text-sm opacity-70">Age- {age} years old</p>
-        </section>
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-300 opacity-50 duration-300 hover:opacity-100">
-          <GoArrowRight className="p-[2px] text-3xl text-slate-900" />
+         
+        <div className="flex w-full justify-between items-center">
+          <p className="text-sm sopacity-70">Age - {age} years old</p>
+          <p className={`text-sm opacity-70 ${statusColor}`}>{status}</p>
         </div>
+      
+        </section>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 import Button from "../ui/Button";
 
 const FormField = ({ label, type, name, value, onChange, options, error }) => (
@@ -23,13 +24,6 @@ const FormField = ({ label, type, name, value, onChange, options, error }) => (
           </option>
         ))}
       </select>
-    ) : type === "textarea" ? (
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        className="w-full rounded-lg border px-3 py-2"
-      />
     ) : (
       <input
         type={type}
@@ -45,114 +39,81 @@ const FormField = ({ label, type, name, value, onChange, options, error }) => (
 // Main Form Component
 const PetAdoptionForm = () => {
   const [formData, setFormData] = useState({
-    name: "",
-    age: "",
-    picture: null,
-    area: "",
-    type: "dog",
-    justification: "",
+    fullName: "",
     email: "",
-    phone: "",
+    phoneNumber: "",
+    petName: "",
+    petCategory: "Dog",
   });
 
   const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: files ? files[0] : value,
+      [name]: value,
     });
   };
 
   const validate = () => {
     let tempErrors = {};
-    if (!formData.name) tempErrors.name = "*required";
-    if (!formData.age) tempErrors.age = "*required";
-    if (!formData.area) tempErrors.area = "*required";
-    if (!formData.justification) tempErrors.justification = "*required";
+    if (!formData.fullName) tempErrors.fullName = "*required";
     if (!formData.email) tempErrors.email = "*required";
-    if (!formData.phone) tempErrors.phone = "*required";
+    if (!formData.phoneNumber) tempErrors.phoneNumber = "*required";
+    if (!formData.petName) tempErrors.petName = "*required";
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
-    const data = new FormData();
-    for (const key in formData) {
-      data.append(key, formData[key]);
-    }
-
-    // Mock post URL with axios
-    console.log("Form submitted successfully:");
-
-    // What the data looks like
-    for (let [key, value] of data.entries()) {
-      console.log(key, value);
+    try {
+      const response = await axios.post(
+        'https://pawsomeadoptbackend20240619101131.azurewebsites.net/api/applications',
+        {
+          fullName: formData.fullName,
+          email: formData.email,
+          phoneNumber: formData.phoneNumber,
+          petName: formData.petName,
+          petCategory: formData.petCategory,
+        },
+        {
+          headers: {
+            'accept': '*/*',
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your pet adoption application has been submitted successfully.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    } catch (error) {
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was an error submitting your application. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      console.error("Error submitting application:", error);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="w-full p-4">
       <FormField
-        label="Name"
+        label="Full Name"
         type="text"
-        name="name"
-        value={formData.name}
+        name="fullName"
+        value={formData.fullName}
         onChange={handleChange}
-        error={errors.name}
+        error={errors.fullName}
       />
-
-      <FormField
-        label="Age"
-        type="number"
-        name="age"
-        value={formData.age}
-        onChange={handleChange}
-        error={errors.age}
-      />
-
-      <FormField
-        label="Picture"
-        type="file"
-        name="picture"
-        onChange={handleChange}
-        error={errors.picture}
-      />
-
-      <FormField
-        label="Area"
-        type="text"
-        name="area"
-        value={formData.area}
-        onChange={handleChange}
-        error={errors.area}
-      />
-
-      <FormField
-        label="Type"
-        type="select"
-        name="type"
-        value={formData.type}
-        onChange={handleChange}
-        options={["Dog", "Cat", "Other"]}
-        error={errors.type}
-      />
-
-      <FormField
-        label="Justification for Giving a Pet"
-        type="textarea"
-        name="justification"
-        value={formData.justification}
-        onChange={handleChange}
-        error={errors.justification}
-      />
-      <label className="flex translate-y-4 items-center justify-center py-2 text-xl font-bold text-orange-400">
-        Contact Information
-      </label>
       <FormField
         label="Email"
         type="email"
@@ -161,21 +122,34 @@ const PetAdoptionForm = () => {
         onChange={handleChange}
         error={errors.email}
       />
-
       <FormField
-        label="Phone"
-        type="number"
-        name="phone"
-        value={formData.phone}
+        label="Phone Number"
+        type="text"
+        name="phoneNumber"
+        value={formData.phoneNumber}
         onChange={handleChange}
-        error={errors.phone}
+        error={errors.phoneNumber}
       />
-
+      <FormField
+        label="Pet Name"
+        type="text"
+        name="petName"
+        value={formData.petName}
+        onChange={handleChange}
+        error={errors.petName}
+      />
+      <FormField
+        label="Pet Category"
+        type="select"
+        name="petCategory"
+        value={formData.petCategory}
+        onChange={handleChange}
+        options={["Dog", "Cat", "Other"]}
+        error={errors.petCategory}
+      />
       <Button
         type="submit"
-        className={
-          "bg-gradient-to-tr from-orange-400 via-orange-400 via-40% to-pink-400 my-6"
-        }
+        className="bg-gradient-to-tr from-orange-400 via-orange-400 via-40% to-pink-400 my-6"
       >
         Submit your Pet
       </Button>
