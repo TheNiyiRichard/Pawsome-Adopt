@@ -69,7 +69,7 @@ const Navbar = () => {
                 onClick={goToAddPet}
                 className={"hidden text-nowrap text-xs sm:flex lg:text-lg"}
               >
-                Add Pet
+                Adopt a Pet
               </Button>
             </li>
             <li
